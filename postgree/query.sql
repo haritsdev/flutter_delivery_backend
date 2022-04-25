@@ -38,3 +38,15 @@ SELECT
     *
 FROM
     USERS;
+
+DELETE FROM
+    USERS
+WHERE
+    ID = 1;
+
+UPDATE
+    USERS
+SET
+    lastname = 'muhammad harits'
+WHERE
+    id = 3;
