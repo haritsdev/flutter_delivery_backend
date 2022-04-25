@@ -1,0 +1,7 @@
+psql -U postgres
+@Novita212121!
+\! cls ## CLEAR SCREEN ## 
+\l ## SHOW DATABASES ##
+CREATE DATABASE flutter_delivery;
+\c flutter_delivery ## USE THIS DATABASE ##
+\d ## Show table in database

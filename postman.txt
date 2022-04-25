@@ -1,0 +1,3 @@
+
+GET ALL USERS
+http://localhost:5456/api/users/getAll
