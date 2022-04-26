@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Role = require('../models/role');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 
@@ -12,7 +13,7 @@ module.exports = {
       console.log(`Error: ${error}`);
       return res.status(501).json({
         success: false,
-        message: 'Error al obtener los usuarios',
+        message: 'Data user gagal di load',
       });
     }
   },
@@ -21,6 +22,8 @@ module.exports = {
     try {
       const user = req.body;
       const data = await User.create(user);
+
+      await Role.create(data.id, 1); // ROLE FOR CLIENT
 
       return res.status(201).json({
         success: true,
@@ -67,7 +70,10 @@ module.exports = {
           phone: myUser.phone,
           image: myUser.image,
           session_token: `JWT ${token}`,
+          roles: myUser.roles,
         };
+
+        console.log(`Sent User ${data}`);
 
         return res.status(201).json({
           success: true,
