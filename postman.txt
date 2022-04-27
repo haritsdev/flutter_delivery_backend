@@ -1,3 +1,7 @@
 
 GET ALL USERS
 http://localhost:5456/api/users/getAll
+
+==================== DEBUK KEY STORE SHA 256 ==========================================
+keytool -list -v -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
+android

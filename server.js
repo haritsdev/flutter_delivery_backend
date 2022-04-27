@@ -5,6 +5,17 @@ const server = http.createServer(app);
 const logger = require('morgan');
 const cors = require('cors');
 const users = require('./routes/usersRoutes');
+const multer = require('multer');
+const admin = require('firebase-admin');
+const serviceAccount = require('./serviceAccountKey.json');
+
+/**
+ * * INISIASI FIREBASE ADMIN
+ *
+ */
+
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+const upload = multer({ storage: multer.memoryStorage() });
 
 const PORT = process.env.PORT || 5456;
 app.use(logger('dev'));
@@ -25,7 +36,7 @@ app.get('/test', (req, res) => {
 /**
  * *LIST OF USER ROUTES
  */
-users(app);
+users(app, upload);
 
 //*Error handling
 app.use((err, req, res, next) => {

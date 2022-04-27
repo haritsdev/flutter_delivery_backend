@@ -2,6 +2,7 @@ const User = require('../models/user');
 const Role = require('../models/role');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
+const storage = require('../utils/cloud_storage');
 
 module.exports = {
   async getAll(req, res, next) {
@@ -40,6 +41,38 @@ module.exports = {
     }
   },
 
+  async registerWithImage(req, res, next) {
+    try {
+      const user = JSON.parse(req.body.user);
+      console.log(`User submit data ${user}`);
+
+      const files = req.files;
+      if (files.length > 0) {
+        const pathImage = `image_${Date.now()}`; // * NAMA FILE
+        const url = await storage(files[0], pathImage);
+
+        if (url != undefined && url != null) {
+          user.image = url;
+        }
+      }
+      const data = await User.create(user);
+
+      await Role.create(data.id, 1); // ROLE FOR CLIENT
+
+      return res.status(201).json({
+        success: true,
+        message: 'User baru berhasil di registrasi',
+        data: data.id,
+      });
+    } catch (error) {
+      console.log(`Error: ${error}`);
+      return res.status(501).json({
+        success: false,
+        message: 'Terjadi kesalahan dalam registrasi user',
+        error: error,
+      });
+    }
+  },
   async login(req, res, next) {
     try {
       const email = req.body.email;

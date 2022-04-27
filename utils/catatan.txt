@@ -1,0 +1,7 @@
+--------GENERATE KEY TOOL----------------------------------------------------------------
+
+keytool -list -v -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
+
+------------------------------------------------------------------------------------------
+
+password :android
