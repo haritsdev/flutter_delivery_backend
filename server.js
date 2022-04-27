@@ -5,9 +5,11 @@ const server = http.createServer(app);
 const logger = require('morgan');
 const cors = require('cors');
 const users = require('./routes/usersRoutes');
+const categories = require('./routes/categoriesRoutes');
 const multer = require('multer');
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
+const passport = require('passport');
 
 /**
  * * INISIASI FIREBASE ADMIN
@@ -22,6 +24,10 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport')(passport);
+
 app.disable('x-powered-by');
 app.set('port', PORT);
 
@@ -37,6 +43,7 @@ app.get('/test', (req, res) => {
  * *LIST OF USER ROUTES
  */
 users(app, upload);
+categories(app);
 
 //*Error handling
 app.use((err, req, res, next) => {

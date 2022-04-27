@@ -11,3 +11,13 @@ CREATE TABLE users(
 	created_at TIMESTAMP(0) NOT NULL,
 	updated_at TIMESTAMP(0) NOT NULL
 );
+
+DROP TABLE IF EXISTS categories CASCADE;
+
+CREATE TABLE categories(
+	id BIGSERIAL PRIMARY KEY,
+	name VARCHAR(100) NOT NULL UNIQUE,
+	description VARCHAR(255) NOT NULL,
+	created_at TIMESTAMP(0) NOT NULL,
+	updated_at TIMESTAMP(0) NOT NULL,
+);

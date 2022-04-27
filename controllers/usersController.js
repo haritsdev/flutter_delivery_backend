@@ -107,7 +107,8 @@ module.exports = {
           { id: myUser.id, email: myUser.email },
           keys.secretOrKey,
           {
-            // expiresIn: (60*60*24) // 1 HORA
+            // expiresIn: 60 * 60 * 24, // 1 JAM
+            expiresIn: 60 * 2, // 2 menit
           }
         );
         const data = {
@@ -121,7 +122,9 @@ module.exports = {
           roles: myUser.roles,
         };
 
-        console.log(`Sent User ${data}`);
+        await User.updateToken(myUser.id, `JWT ${token}`);
+
+        console.log(`LOGIN USER ${data}`);
 
         return res.status(201).json({
           success: true,
@@ -139,7 +142,7 @@ module.exports = {
       return res.status(501).json({
         success: false,
         message: 'Terjadi Kesalahan ketika login',
-        error: error,
+        error: error.message,
       });
     }
   },
@@ -171,6 +174,25 @@ module.exports = {
       return res.status(501).json({
         success: false,
         message: 'Terjadi Kesalahan dalam mengupdate profile',
+        error: error,
+      });
+    }
+  },
+
+  async logout(req, res, next) {
+    try {
+      const id = req.body.id;
+      await User.updateToken(id, null);
+      return res.status(201).json({
+        success: true,
+        data: data,
+        message: 'User Berhasil Logout',
+      });
+    } catch (error) {
+      console.log(`Error: ${error}`);
+      return res.status(501).json({
+        success: false,
+        message: 'Terjadi Kesalahan ketika Logout',
         error: error,
       });
     }
