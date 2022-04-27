@@ -19,6 +19,21 @@ module.exports = {
     }
   },
 
+  async findById(req, res, next) {
+    try {
+      const id = req.params.id;
+      const data = await User.findByUserId(id);
+      console.log(`Users: ${data}`);
+      return res.status(201).json(data);
+    } catch (error) {
+      console.log(`Error: ${error}`);
+      return res.status(501).json({
+        success: false,
+        message: 'Data user gagal di load',
+      });
+    }
+  },
+
   async register(req, res, next) {
     try {
       const user = req.body;
@@ -124,6 +139,38 @@ module.exports = {
       return res.status(501).json({
         success: false,
         message: 'Terjadi Kesalahan ketika login',
+        error: error,
+      });
+    }
+  },
+
+  async updateProfile(req, res, next) {
+    try {
+      const user = JSON.parse(req.body.user);
+      const files = req.files;
+
+      if (files.length > 0) {
+        const pathImage = `image_${Date.now()}`; // * NAMA FILE
+        const url = await storage(files[0], pathImage);
+
+        if (url != undefined && url != null) {
+          user.image = url;
+        }
+      }
+
+      console.log(user);
+
+      await User.updateProfile(user);
+
+      return res.status(201).json({
+        success: true,
+        message: 'Data Profile Berhasil di update',
+      });
+    } catch (error) {
+      console.log(`Error: ${error}`);
+      return res.status(501).json({
+        success: false,
+        message: 'Terjadi Kesalahan dalam mengupdate profile',
         error: error,
       });
     }
